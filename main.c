@@ -397,12 +397,12 @@ void run_sparkle_mode(void)
     uint8_t sparkle = rand() % 256;
 
     for (int i = 0; i < 8; i++) {
-        LL_GPIO_ResetOutputPin(LED_Ports[i], LED_Pins[i]);
+        LL_GPIO_ResetOutputPin(GPIOB, (1 << i));
     }
 
     for (int i = 0; i < 8; i++) {
         if (sparkle & (1 << i)) {
-            LL_GPIO_SetOutputPin(LED_Ports[i], LED_Pins[i]);
+            LL_GPIO_ResetOutputPin(GPIOB, (1 << i));
         }
     }
 
@@ -410,7 +410,7 @@ void run_sparkle_mode(void)
 
     for (int i = 0; i < 8; i++) {
         if (sparkle & (1 << i)) {
-            LL_GPIO_ResetOutputPin(LED_Ports[i], LED_Pins[i]);
+            LL_GPIO_ResetOutputPin(GPIOB, (1 << i));
             HAL_Delay(rand() % 1500);
         }
     }
