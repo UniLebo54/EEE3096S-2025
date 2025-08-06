@@ -382,34 +382,39 @@ void TIM16_IRQHandler(void)
 		case 3:
 
 			// Mode 3: sparkle
-			uint8_t sparkle = rand() % 256;
+			 do_sparkle = 1;  // defer sparkle to main loop
+				break;
 
-			LL_GPIO_ResetOutputPin(LED0_GPIO_Port, LED0_Pin | LED1_Pin | LED2_Pin | LED3_Pin |
-			                       LED4_Pin | LED5_Pin | LED6_Pin | LED7_Pin);
-
-			for (int i = 0; i < 8; i++) {
-				if (sparkle & (1 << i)) {
-					LL_GPIO_SetOutputPin(GPIOB, (1 << i));
+			default:
+				for (int i = 0; i < 8; i++) {
+					LL_GPIO_ResetOutputPin(LED_Ports[i], LED_Pins[i]);
 				}
-			}
-
-			HAL_Delay(100 + rand() % 1401);
-
-			for (int i = 0; i < 8; i++) {
-				if (sparkle & (1 << i)) {
-					LL_GPIO_ResetOutputPin(GPIOB, (1 << i));
-					HAL_Delay(rand() % 101);
-				}
-			}
-			break;
-		}
-		default:
-			LL_GPIO_ResetOutputPin(LED0_GPIO_Port, LED0_Pin | LED1_Pin | LED2_Pin | LED3_Pin |
-			                       LED4_Pin | LED5_Pin | LED6_Pin | LED7_Pin);
-			break;
+				break;
 		}
 }
+void run_sparkle_mode(void)
+{
+    uint8_t sparkle = rand() % 256;
 
+    for (int i = 0; i < 8; i++) {
+        LL_GPIO_ResetOutputPin(LED_Ports[i], LED_Pins[i]);
+    }
+
+    for (int i = 0; i < 8; i++) {
+        if (sparkle & (1 << i)) {
+            LL_GPIO_SetOutputPin(LED_Ports[i], LED_Pins[i]);
+        }
+    }
+
+    HAL_Delay(100 + rand() % 1401);
+
+    for (int i = 0; i < 8; i++) {
+        if (sparkle & (1 << i)) {
+            LL_GPIO_ResetOutputPin(LED_Ports[i], LED_Pins[i]);
+            HAL_Delay(rand() % 1500);
+        }
+    }
+}
 /* USER CODE END 4 */
 
 
